@@ -1,3 +1,5 @@
+package com.robybp.coroutinesplayground
+
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import kotlin.concurrent.thread
@@ -14,7 +16,7 @@ class SuspendCoroutineTest {
         runTest {
             val expected = "I'm expecting this"
 
-            val actual = suspendCoroutine<String> { continuation -> continuation.resume(expected) }
+            val actual = suspendCoroutine { continuation -> continuation.resume(expected) }
 
             assertEquals(expected, actual)
         }
@@ -40,7 +42,7 @@ class SuspendCoroutineTest {
         runTest {
             val expected = Thread.currentThread().id
 
-            suspendCoroutine<String> { continuation -> thread(name = "New thread") { continuation.resume("") } }
+            suspendCoroutine { continuation -> thread(name = "New thread") { continuation.resume("") } }
 
             val actual = Thread.currentThread().id
 
@@ -51,7 +53,7 @@ class SuspendCoroutineTest {
     fun `should throw IllegalStateException in case of multiple Resume attempts`() =
         runTest {
             val result = try {
-                suspendCoroutine<String> { continuation ->
+                suspendCoroutine { continuation ->
                     continuation.resume("")
                     continuation.resumeWithException(RuntimeException(""))
                 }
