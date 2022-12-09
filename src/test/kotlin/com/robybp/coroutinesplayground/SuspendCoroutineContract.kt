@@ -9,7 +9,7 @@ import kotlin.coroutines.suspendCoroutine
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class SuspendCoroutineTest {
+class SuspendCoroutineContract {
 
     @Test
     fun `should return expected value if no errors`() =
@@ -53,11 +53,10 @@ class SuspendCoroutineTest {
     fun `should throw IllegalStateException in case of multiple Resume attempts`() =
         runTest {
             val result = try {
-                suspendCoroutine { continuation ->
-                    continuation.resume("")
-                    continuation.resumeWithException(RuntimeException(""))
+                suspendCoroutine<String> { continuation ->
+                    continuation.resume("first")
+                    continuation.resume("second")
                 }
-                null
             } catch (thr: Throwable) {
                 thr
             }
