@@ -7,7 +7,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
+import kotlin.test.assertFailsWith
 
 class SuspendCoroutineContract {
 
@@ -52,15 +52,11 @@ class SuspendCoroutineContract {
     @Test
     fun `should throw IllegalStateException in case of multiple Resume attempts`() =
         runTest {
-            val result = try {
+            assertFailsWith(IllegalStateException::class) {
                 suspendCoroutine<String> { continuation ->
                     continuation.resume("first")
                     continuation.resume("second")
                 }
-            } catch (thr: Throwable) {
-                thr
             }
-
-            assertIs<IllegalStateException>(result)
         }
 }
